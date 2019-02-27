@@ -6,7 +6,8 @@
 # SETUP
 ## 1. Download OpenCV and extract it somewhere
 
-## 2. **Run** Win+R => `rundll32 sysdm.cpl,EditEnvironmentVariables` or Simply locate Edit Env Variables
+## 2. Locate Edit Env Variables
+**Run** Win+R => `rundll32 sysdm.cpl,EditEnvironmentVariables` or Simply locate it in Windows Settings
 
 ## 3. Create Windows Environment System variable:
 **Key**: `OPENCV_DIR`
