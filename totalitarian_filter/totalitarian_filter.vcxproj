@@ -126,9 +126,6 @@
   <ItemGroup>
     <ClCompile Include="totalitarian_filter.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\Downloads\lena.tiff" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
