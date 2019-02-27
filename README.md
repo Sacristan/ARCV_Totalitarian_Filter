@@ -6,7 +6,9 @@
 # SETUP
 ## 1. Download OpenCV and extract it somewhere
 
-## 2. Create System variable:
+## 2. Create Windows Environment System variable:
+**Run** Win+R => `rundll32 sysdm.cpl,EditEnvironmentVariables` 
+
 **Key**: `OPENCV_DIR`
 
 **Value**: Directory to extracted opencv build dir, example `C:\opencv_41\opencv\build`
