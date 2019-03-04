@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 	
 	for (int i = 0; i < descriptors_2.rows; i++)
 	{
-		if (matches[i].distance <= max(2 * min_dist, 30.0))
+		if (matches[i].distance <= max(1 * min_dist, 50.0))
 		{
 			good_matches.push_back(matches[i]);
 		}
@@ -88,9 +88,14 @@ int main(int argc, char** argv)
 		DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
 	);
 
+
+	/*Rect r = Rect(10, 20, 40, 60);
+	rectangle(img_goodmatch, r, Scalar(255, 0, 0), 1, 8, 0);
+*/
 	//imshow("All matching Points", img_match);
 
 	imshow("Filtered matching Points", img_goodmatch);
+	
 
 	waitKey(0);
 
