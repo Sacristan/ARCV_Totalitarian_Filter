@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 	Mat outimg1;
 	drawKeypoints(image_scene, keypoints_scene, outimg1, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
 
-	imshow("ORB", outimg1);
+
 
 
 	vector<DMatch> matches;
@@ -108,11 +108,17 @@ int main(int argc, char** argv)
 	}
 
 	cv::Rect brect = cv::boundingRect(cv::Mat(obj).reshape(2));
-	cv::rectangle(img_goodmatch, brect.tl(), brect.br(), cv::Scalar(100, 100, 200), 5);
+
+	cv::Size deltaSize(brect.width * 0.5f, brect.height * 0.5f);
+	cv::Point offset(deltaSize.width / 2, deltaSize.height / 2);
+	brect += deltaSize;
+	brect -= offset;
+
+	cv::rectangle(outimg1, brect.tl(), brect.br(), cv::Scalar(100, 100, 200), 5);
 
 	//-- Show detected matchesd
 	imshow("Good Matches & Object detection", img_goodmatch);
-
+	imshow("ORB", outimg1);
 	/*Rect r = Rect(10, 20, 40, 60);
 	rectangle(img_goodmatch, r, Scalar(255, 0, 0), 1, 8, 0);*/
 
