@@ -11,11 +11,13 @@ using namespace cv;
 
 int main(int argc, char** argv)
 {
-	Mat image_scene_original = imread("images/ussr_sucks/source_ussr_6.jpg");
-	Mat image_template_original = imread("images/ussr_sucks/template_ussr.jpg");
+	int match_distance = 40;
 
-//Mat image_scene_original = imread("images/nazi_germany_sucks/source_nazi_3.jpg");
-//Mat image_template_original = imread("images/nazi_germany_sucks/template_nazi.jpg");
+	//Mat image_scene_original = imread("images/ussr_sucks/source_ussr_6.jpg"); //6
+	//Mat image_template_original = imread("images/ussr_sucks/template_ussr.jpg");
+
+	Mat image_scene_original = imread("images/nazi_germany_sucks/source_nazi_6.jpg"); //5, 6, 3
+	Mat image_template_original = imread("images/nazi_germany_sucks/template_nazi.jpg");
 
 	Mat image_scene;
 	Mat image_template;
@@ -43,59 +45,76 @@ int main(int argc, char** argv)
 
 	Mat outimg1;
 	drawKeypoints(image_scene, keypoints_scene, outimg1, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-	//imshow("ORB", outimg1);
+
+	imshow("ORB", outimg1);
+
 
 	vector<DMatch> matches;
 	matcher->match(descriptors_1, descriptors_2, matches);
 
-	double min_dist = 10000, max_dist = 0;
+	/*double min_dist = 10000, max_dist = 0;
 
 	for (int i = 0; i < descriptors_1.rows; i++)
 	{
 		double dist = matches[i].distance;
 		if (dist < min_dist) min_dist = dist;
 		if (dist > max_dist) max_dist = dist;
+		printf("-- Max dist : %f \n", max_dist);
+		printf("-- Min dist : %f \n", min_dist);
 	}
 
 	printf("-- Max dist : %f \n", max_dist);
-	printf("-- Min dist : %f \n", min_dist);
+	printf("-- Min dist : %f \n", min_dist);*/
 
 	vector< DMatch > good_matches;
-	
+
 	for (int i = 0; i < descriptors_2.rows; i++)
 	{
-		if (matches[i].distance <= max(1 * min_dist, 50.0))
+
+		if (matches[i].distance <= match_distance)
 		{
 			good_matches.push_back(matches[i]);
+
 		}
+
 	}
 
 	//Mat img_match;
 	Mat img_goodmatch;
 	//drawMatches(img_1, keypoints_1, img_2, keypoints_2, matches, img_match);
-	
+
 	drawMatches(
 		image_scene,
 		keypoints_scene,
 		image_template,
 		keypoints_template,
 		good_matches,
-		img_goodmatch, 
-		
+		img_goodmatch,
+
 		Scalar::all(-1),
 		Scalar::all(-1),
 		std::vector<char>(),
 		DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
 	);
+	std::vector<Point2f> obj;
+	std::vector<Point2f> scene;
+	for (unsigned int i = 0; i < good_matches.size(); i++)
+	{
+		//-- Get the keypoints from the good matches
+		obj.push_back(keypoints_scene[good_matches[i].queryIdx].pt);
+		//printf("%f ", keypoints_scene[good_matches[i].queryIdx].pt);
+		scene.push_back(keypoints_template[good_matches[i].trainIdx].pt);
+		printf("%f ", keypoints_template[good_matches[i].trainIdx].pt);
+	}
 
+	cv::Rect brect = cv::boundingRect(cv::Mat(obj).reshape(2));
+	cv::rectangle(img_goodmatch, brect.tl(), brect.br(), cv::Scalar(100, 100, 200), 5);
+
+	//-- Show detected matchesd
+	imshow("Good Matches & Object detection", img_goodmatch);
 
 	/*Rect r = Rect(10, 20, 40, 60);
-	rectangle(img_goodmatch, r, Scalar(255, 0, 0), 1, 8, 0);
-*/
-	//imshow("All matching Points", img_match);
-
-	imshow("Filtered matching Points", img_goodmatch);
-	
+	rectangle(img_goodmatch, r, Scalar(255, 0, 0), 1, 8, 0);*/
 
 	waitKey(0);
 
