@@ -110,6 +110,8 @@ int main(int argc, char** argv)
 	cv::Rect brect = cv::boundingRect(cv::Mat(obj).reshape(2));
 	cv::rectangle(img_goodmatch, brect.tl(), brect.br(), cv::Scalar(100, 100, 200), 5);
 
+	cv::GaussianBlur(img_goodmatch(brect), img_goodmatch(brect), Size(0, 0), 10);
+
 	//-- Show detected matchesd
 	imshow("Good Matches & Object detection", img_goodmatch);
 
