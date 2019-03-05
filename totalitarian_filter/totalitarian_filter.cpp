@@ -18,15 +18,15 @@ const map<std::string, std::string> testImageMap = {
 	//{ "images/ussr_sucks/source_ussr_5.jpg", "images/ussr_sucks/template_ussr.jpg", },
 	//{ "images/ussr_sucks/source_ussr_6.jpg", "images/ussr_sucks/template_ussr.jpg", },
 
-	////	{ "images/nazi_germany_sucks/source_nazi_1.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	////	{ "images/nazi_germany_sucks/source_nazi_2.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	////	{ "images/nazi_germany_sucks/source_nazi_3.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	//////	{ "images/nazi_germany_sucks/source_nazi_1.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	//////	{ "images/nazi_germany_sucks/source_nazi_2.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	//////	{ "images/nazi_germany_sucks/source_nazi_3.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_4.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_5.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_6.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_7.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	////	{ "images/nazi_germany_sucks/source_nazi_8.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	////	{ "images/nazi_germany_sucks/source_nazi_9.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	//////	{ "images/nazi_germany_sucks/source_nazi_8.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	//////	{ "images/nazi_germany_sucks/source_nazi_9.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 };
 
 
@@ -95,19 +95,30 @@ void Filter(string sourceImagePath, string templateImagePath, int match_dis) {
 	}
 	//imshow("Good Matches & Object detection", img_goodmatch);
 
-	cv::Rect brect = cv::boundingRect(cv::Mat(obj).reshape(2));
-	cv::Size deltaSize(brect.width * 0.5f, brect.height * 0.5f);
-	cv::Point offset(deltaSize.width / 2, deltaSize.height / 2);
-	brect += deltaSize;
-	brect -= offset;
+	if (obj.size() == 0)
+	{
+		cout << "No object points located - nothing to filter..." << std::endl;
+		//imshow("Image keypoints ORB", img_keypoints);
+		//imshow("Good Matches & Object detection", img_goodmatch);
+		//imshow(sourceImagePath, image_scene);
+	}
+	else
+	{
+		cout << "Located "<< obj.size() <<" object points - Blurring..." << std::endl;
 
-	cv::rectangle(img_keypoints, brect.tl(), brect.br(), cv::Scalar(255, 0, 0), 5);
+		cv::Rect brect = cv::boundingRect(cv::Mat(obj).reshape(2));
+		cv::Size deltaSize(brect.width * 0.5f, brect.height * 0.5f);
+		cv::Point offset(deltaSize.width / 2, deltaSize.height / 2);
+		brect += deltaSize;
+		brect -= offset;
 
-	//imshow("Box", img_keypoints);
+		cv::rectangle(img_keypoints, brect.tl(), brect.br(), cv::Scalar(255, 0, 0), 5);
 
-	cv::GaussianBlur(image_scene(brect), image_scene(brect), Size(0, 0), 12);
+		//imshow("Box", img_keypoints);
 
-	imshow(sourceImagePath, image_scene);
+		cv::GaussianBlur(image_scene(brect), image_scene(brect), Size(0, 0), 12);
+		imshow(sourceImagePath, image_scene);
+	}
 }
 
 int main(int argc, char** argv)
