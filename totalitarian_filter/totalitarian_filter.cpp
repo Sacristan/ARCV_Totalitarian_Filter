@@ -10,49 +10,39 @@
 using namespace std;
 using namespace cv;
 
-map<std::string, std::string> myMap = {
-	{ "images/ussr_sucks/source_ussr_1.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	{ "images/ussr_sucks/source_ussr_2.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	{ "images/ussr_sucks/source_ussr_3.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	{ "images/ussr_sucks/source_ussr_4.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	{ "images/ussr_sucks/source_ussr_5.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	{ "images/ussr_sucks/source_ussr_6.jpg", "images/ussr_sucks/template_ussr.jpg", },
+const map<std::string, std::string> testImageMap = {
+	//{ "images/ussr_sucks/source_ussr_1.jpg", "images/ussr_sucks/template_ussr.jpg", },
+	//{ "images/ussr_sucks/source_ussr_2.jpg", "images/ussr_sucks/template_ussr.jpg", },
+	//{ "images/ussr_sucks/source_ussr_3.jpg", "images/ussr_sucks/template_ussr.jpg", },
+	//{ "images/ussr_sucks/source_ussr_4.jpg", "images/ussr_sucks/template_ussr.jpg", },
+	//{ "images/ussr_sucks/source_ussr_5.jpg", "images/ussr_sucks/template_ussr.jpg", },
+	//{ "images/ussr_sucks/source_ussr_6.jpg", "images/ussr_sucks/template_ussr.jpg", },
 
-	{ "images/nazi_germany_sucks/source_nazi_1.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_2.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_3.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	////	{ "images/nazi_germany_sucks/source_nazi_1.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	////	{ "images/nazi_germany_sucks/source_nazi_2.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	////	{ "images/nazi_germany_sucks/source_nazi_3.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_4.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_5.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_6.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 	{ "images/nazi_germany_sucks/source_nazi_7.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_8.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_9.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	////	{ "images/nazi_germany_sucks/source_nazi_8.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	////	{ "images/nazi_germany_sucks/source_nazi_9.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
 };
 
-int main(int argc, char** argv)
-{
-	//for (auto i : myMap)
-	//	cout << i.first << "   " << i.second
-	//	<< endl;
 
-	int match_distance = 40;
+void Filter(string sourceImagePath, string templateImagePath, int match_dis) {
 
-	//Mat image_scene_original = imread("images/ussr_sucks/source_ussr_6.jpg"); //6
-	//Mat image_template_original = imread("images/ussr_sucks/template_ussr.jpg");
-
-	Mat image_scene_original = imread("images/nazi_germany_sucks/source_nazi_6.jpg"); //5, 6, 3
-	Mat image_template_original = imread("images/nazi_germany_sucks/template_nazi.jpg");
+	Mat image_scene_original = imread(sourceImagePath);
+	Mat image_template_original = imread(templateImagePath);
 
 	Mat image_scene;
 	Mat image_template;
 
+	Mat img_keypoints;
+	Mat img_goodmatch;
+
 	image_scene_original.copyTo(image_scene);
 	image_template_original.copyTo(image_template);
-
-	//Mat img_1_gray;
-	//cvtColor(image_scene, image_scene, COLOR_BGR2GRAY);
-	//blur(image_scene, image_scene, Size(10, 10));
-	//cv::adaptiveThreshold(img_1, img_1, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 11, 2);	//block size nepara skaitlis >= 3
 
 	std::vector<KeyPoint> keypoints_scene, keypoints_template;
 	Mat descriptors_1, descriptors_2;
@@ -67,45 +57,21 @@ int main(int argc, char** argv)
 	descriptor->compute(image_scene, keypoints_scene, descriptors_1);
 	descriptor->compute(image_template, keypoints_template, descriptors_2);
 
-	Mat outimg1;
-	drawKeypoints(image_scene, keypoints_scene, outimg1, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-
-
-
+	drawKeypoints(image_scene, keypoints_scene, img_keypoints, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+	//imshow("Image keypoints ORB", img_keypoints);
 
 	vector<DMatch> matches;
 	matcher->match(descriptors_1, descriptors_2, matches);
-
-	/*double min_dist = 10000, max_dist = 0;
-
-	for (int i = 0; i < descriptors_1.rows; i++)
-	{
-		double dist = matches[i].distance;
-		if (dist < min_dist) min_dist = dist;
-		if (dist > max_dist) max_dist = dist;
-		printf("-- Max dist : %f \n", max_dist);
-		printf("-- Min dist : %f \n", min_dist);
-	}
-
-	printf("-- Max dist : %f \n", max_dist);
-	printf("-- Min dist : %f \n", min_dist);*/
 
 	vector< DMatch > good_matches;
 
 	for (int i = 0; i < descriptors_2.rows; i++)
 	{
-
-		if (matches[i].distance <= match_distance)
+		if (matches[i].distance <= match_dis)
 		{
 			good_matches.push_back(matches[i]);
-
 		}
-
 	}
-
-	//Mat img_match;
-	Mat img_goodmatch;
-	//drawMatches(img_1, keypoints_1, img_2, keypoints_2, matches, img_match);
 
 	drawMatches(
 		image_scene,
@@ -120,35 +86,44 @@ int main(int argc, char** argv)
 		std::vector<char>(),
 		DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
 	);
+
 	std::vector<Point2f> obj;
-	std::vector<Point2f> scene;
+
 	for (unsigned int i = 0; i < good_matches.size(); i++)
 	{
-		//-- Get the keypoints from the good matches
 		obj.push_back(keypoints_scene[good_matches[i].queryIdx].pt);
-		//printf("%f ", keypoints_scene[good_matches[i].queryIdx].pt);
-		scene.push_back(keypoints_template[good_matches[i].trainIdx].pt);
-		printf("%f ", keypoints_template[good_matches[i].trainIdx].pt);
 	}
+	//imshow("Good Matches & Object detection", img_goodmatch);
 
 	cv::Rect brect = cv::boundingRect(cv::Mat(obj).reshape(2));
-
 	cv::Size deltaSize(brect.width * 0.5f, brect.height * 0.5f);
 	cv::Point offset(deltaSize.width / 2, deltaSize.height / 2);
 	brect += deltaSize;
 	brect -= offset;
 
-	cv::rectangle(outimg1, brect.tl(), brect.br(), cv::Scalar(100, 100, 200), 5);
+	cv::rectangle(img_keypoints, brect.tl(), brect.br(), cv::Scalar(255, 0, 0), 5);
 
-	cv::GaussianBlur(img_goodmatch(brect), img_goodmatch(brect), Size(0, 0), 12);
+	//imshow("Box", img_keypoints);
 
-	//-- Show detected matchesd
-	imshow("Good Matches & Object detection", img_goodmatch);
-	imshow("ORB", outimg1);
-	/*Rect r = Rect(10, 20, 40, 60);
-	rectangle(img_goodmatch, r, Scalar(255, 0, 0), 1, 8, 0);*/
+	cv::GaussianBlur(image_scene(brect), image_scene(brect), Size(0, 0), 12);
+
+	imshow(sourceImagePath, image_scene);
+}
+
+int main(int argc, char** argv)
+{
+	int match_distance = 40;
+
+	//Filter("images/nazi_germany_sucks/source_nazi_9.jpg", "images/nazi_germany_sucks/template_nazi.jpg", match_distance);
+
+	for (auto i : testImageMap) {
+		cout << "Filtering: " << i.first << " template: " << i.second << endl;
+		Filter(i.first, i.second, match_distance);
+	}
 
 	waitKey(0);
 
 	return 0;
 }
+
+
