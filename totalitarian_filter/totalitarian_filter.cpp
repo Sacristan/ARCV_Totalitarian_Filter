@@ -11,22 +11,17 @@ using namespace std;
 using namespace cv;
 
 const map<std::string, std::string> testImageMap = {
-	//{ "images/ussr_sucks/source_ussr_1.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	//{ "images/ussr_sucks/source_ussr_2.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	//{ "images/ussr_sucks/source_ussr_3.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	//{ "images/ussr_sucks/source_ussr_4.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	//{ "images/ussr_sucks/source_ussr_5.jpg", "images/ussr_sucks/template_ussr.jpg", },
-	//{ "images/ussr_sucks/source_ussr_6.jpg", "images/ussr_sucks/template_ussr.jpg", },
-
-	//////	{ "images/nazi_germany_sucks/source_nazi_1.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	//////	{ "images/nazi_germany_sucks/source_nazi_2.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	//////	{ "images/nazi_germany_sucks/source_nazi_3.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_4.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_5.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_6.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	{ "images/nazi_germany_sucks/source_nazi_7.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	//////	{ "images/nazi_germany_sucks/source_nazi_8.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
-	//////	{ "images/nazi_germany_sucks/source_nazi_9.jpg", "images/nazi_germany_sucks/template_nazi.jpg", },
+	
+	/*{ "images/ussr/source_ussr_1.jpg", "images/ussr/template_ussr.jpg", },
+	{ "images/ussr/source_ussr_2.jpg", "images/ussr/template_ussr.jpg", },
+	{ "images/ussr/source_ussr_3.jpg", "images/ussr/template_ussr.jpg", },
+	{ "images/ussr/source_ussr_4.jpg", "images/ussr/template_ussr.jpg", },
+	{ "images/ussr/source_ussr_5.jpg", "images/ussr/template_ussr.jpg", },*/
+	{ "images/nazi_germany/source_nazi_1.jpg", "images/nazi_germany/template_nazi.jpg", },
+	{ "images/nazi_germany/source_nazi_2.jpg", "images/nazi_germany/template_nazi.jpg", },
+	{ "images/nazi_germany/source_nazi_3.jpg", "images/nazi_germany/template_nazi.jpg", },
+	{ "images/nazi_germany/source_nazi_4.jpg", "images/nazi_germany/template_nazi.jpg", },
+	{ "images/nazi_germany/source_nazi_5.jpg", "images/nazi_germany/template_nazi.jpg", }
 };
 
 
